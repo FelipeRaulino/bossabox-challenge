@@ -1,0 +1,120 @@
+openapi: 3.0.1
+
+info:
+  title: BossaBox Challenge API
+  description: An API that is part of the technical challenge of BossaBox. The API has the purpose of covers the main funcionalities of a VUTTR (Very Useful Tools to Remember).
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api
+    description: Optional server description, e.g. Internal staging server for testing
+  - url: http://staging-api.example.com
+    description: Optional server description, e.g. Main (production) server
+
+paths:
+  /tools:
+    get:
+      tags:
+        - Tools
+      summary: Returns a list of tools.
+      description: Tools registered in the API.
+      responses:
+        "200": # status code
+          description: A JSON array of tools personlized data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+    post:
+      tags:
+        - Tools
+      summary: Returns a new recent added tool.
+      description: Adding a new tool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                link:
+                  type: string
+                description:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "201":
+          description: Tool created with sucessfull
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tool"
+
+  /tools/{id}:
+    delete:
+      tags:
+        - Tools
+      summary: Returns a empty object representing the removed tool.
+      description: Deleting tool of the API.
+      parameters:
+        - name: id
+          in: path
+          description: Tool ID
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Tool deleted with success
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /tools/search:
+    get:
+      tags:
+        - Tools
+      summary: Returns a list of tools finded according the referenced tag.
+      description: List of tools of the API based in tags.
+      parameters:
+        - name: tagName
+          in: query
+          description: Tag Name
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: Tool created with sucessfull
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tool"
+
+components:
+  schemas:
+    Tool:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        link:
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
